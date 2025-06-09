@@ -1,7 +1,6 @@
 package com.example.final_mobile.model;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class CoursesResponse {
     @SerializedName("id")
@@ -16,8 +15,8 @@ public class CoursesResponse {
     @SerializedName("url")
     private String url;
 
-    @SerializedName("image")
-    private String image;
+    @SerializedName("pic")  // Changed from "image" to "pic"
+    private String pic;     // Changed variable name
 
     @SerializedName("category")
     private String category;
@@ -27,6 +26,6 @@ public class CoursesResponse {
     public String getTitle() { return title; }
     public String getPrice() { return price; }
     public String getUrl() { return url; }
-    public String getImage() { return image; }
+    public String getImage() { return pic; }  // Keep method name for compatibility
     public String getCategory() { return category; }
 }

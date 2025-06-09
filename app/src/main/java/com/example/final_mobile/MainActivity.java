@@ -2,19 +2,24 @@ package com.example.final_mobile;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.final_mobile.adapter.CourseAdapter;
+import com.example.final_mobile.fragments.AboutFragment;
+import com.example.final_mobile.fragments.FavoriteFragment;
 import com.example.final_mobile.model.Course;
 import com.example.final_mobile.model.CoursesResponse;
 import com.example.final_mobile.network.ApiService;
 import com.example.final_mobile.network.RetrofitClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private CourseAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
     private ApiService apiService;
+    private int currentPage = 0;
+    private BottomNavigationView bottomNavigationView;
+    private View mainContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,21 +44,71 @@ public class MainActivity extends AppCompatActivity {
 
         setupViews();
         setupRecyclerView();
+        setupBottomNavigation();
         loadCourses();
     }
 
     private void setupViews() {
+        mainContent = findViewById(R.id.swipeRefresh);  // Changed from main_content to swipeRefresh
         rvCourses = findViewById(R.id.rvCourses);
         swipeRefresh = findViewById(R.id.swipeRefresh);
 
-        swipeRefresh.setOnRefreshListener(this::loadCourses);
+        swipeRefresh.setOnRefreshListener(() -> {
+            currentPage = 0;
+            loadCourses();
+        });
+    }
+
+    private void setupBottomNavigation() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navigation_home) {
+                showMainContent();
+                return true;
+            }if (itemId == R.id.navigation_favorite) {
+                loadFragment(new FavoriteFragment());
+                return true;
+            } else if (itemId == R.id.navigation_about) {
+                loadFragment(new AboutFragment());
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void showMainContent() {
+        // Hide any active fragments
+        Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        if (currentFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(currentFragment)
+                    .commit();
+        }
+
+        // Show main content
+        mainContent.setVisibility(View.VISIBLE);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        // Hide main content
+        mainContent.setVisibility(View.GONE);
+
+        // Show fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
     private void setupRecyclerView() {
-        adapter = new CourseAdapter(new ArrayList<>(), course -> {
-            // No action for now
-            Toast.makeText(this, "Selected: " + course.getTitle(), Toast.LENGTH_SHORT).show();
-        });
+        adapter = new CourseAdapter(new ArrayList<>(),
+                course -> {
+                    Toast.makeText(this, "Selected: " + course.getTitle(), Toast.LENGTH_SHORT).show();
+                },
+                this::loadMoreCourses
+        );
 
         rvCourses.setLayoutManager(new LinearLayoutManager(this));
         rvCourses.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -59,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadCourses() {
         apiService = RetrofitClient.getApiService(this);
-        apiService.getCourses(0).enqueue(new Callback<List<Course>>() {
+        apiService.getCourses(currentPage).enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
                 swipeRefresh.setRefreshing(false);
@@ -72,26 +130,59 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "No courses found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    try {
-                        Log.e("MainActivity", "Error: " + response.errorBody().string());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(MainActivity.this,
-                            "Error loading courses: " + response.code(), Toast.LENGTH_SHORT).show();
+                    handleError(response);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
-                swipeRefresh.setRefreshing(false);
-                Log.e("MainActivity", "Network error: " + t.getMessage());
-                t.printStackTrace();
-                Toast.makeText(MainActivity.this,
-                        "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                handleFailure(t);
             }
         });
+    }
 
+    private void loadMoreCourses() {
+        currentPage++;
+        apiService.getCourses(currentPage).enqueue(new Callback<List<Course>>() {
+            @Override
+            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (!response.body().isEmpty()) {
+                        adapter.addCourses(response.body());
+                        Log.d("MainActivity", "Loaded " + response.body().size() + " more courses");
+                    } else {
+                        currentPage--; // Revert page increment if no more courses
+                        Toast.makeText(MainActivity.this, "No more courses available", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    currentPage--; // Revert page increment on error
+                    handleError(response);
+                }
+            }
 
+            @Override
+            public void onFailure(Call<List<Course>> call, Throwable t) {
+                currentPage--; // Revert page increment on error
+                handleFailure(t);
+            }
+        });
+    }
+
+    private void handleError(Response<List<Course>> response) {
+        try {
+            Log.e("MainActivity", "Error: " + response.errorBody().string());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(MainActivity.this,
+                "Error loading courses: " + response.code(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleFailure(Throwable t) {
+        swipeRefresh.setRefreshing(false);
+        Log.e("MainActivity", "Network error: " + t.getMessage());
+        t.printStackTrace();
+        Toast.makeText(MainActivity.this,
+                "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

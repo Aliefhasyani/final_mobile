@@ -28,5 +28,6 @@
             android:name=".CourseDetailActivity"
             android:exported="false" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
