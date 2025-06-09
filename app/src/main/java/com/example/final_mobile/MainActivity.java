@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.final_mobile.adapter.CourseAdapter;
 import com.example.final_mobile.fragments.AboutFragment;
 import com.example.final_mobile.fragments.FavoriteFragment;
+import com.example.final_mobile.fragments.HomeFragment;
 import com.example.final_mobile.model.Course;
 import com.example.final_mobile.model.CoursesResponse;
 import com.example.final_mobile.network.ApiService;
@@ -59,15 +60,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // In MainActivity.java, modify setupBottomNavigation()
     private void setupBottomNavigation() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_home) {
-                showMainContent();
+                loadFragment(new HomeFragment());
                 return true;
-            }if (itemId == R.id.navigation_favorite) {
+            } else if (itemId == R.id.navigation_favorite) {
                 loadFragment(new FavoriteFragment());
                 return true;
             } else if (itemId == R.id.navigation_about) {
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        loadFragment(new HomeFragment());
     }
 
     private void showMainContent() {
