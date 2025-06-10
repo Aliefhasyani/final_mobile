@@ -44,6 +44,6 @@
 - Layout XML di `res/layout/` sudah dioptimalkan untuk dark mode.
 
 ---
+skibiditoile sigma1900
 
-**Catatan:**  
-Pastikan file `themes.xml` dan `themes-night.xml` sudah mengadopsi `Theme.MaterialComponents.DayNight` agar dark mode berjalan optimal.
+
