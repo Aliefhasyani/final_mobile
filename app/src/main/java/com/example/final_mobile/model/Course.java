@@ -23,6 +23,16 @@ public class Course {
     @SerializedName("desc_text")
     private String desc_text;
 
+    public Course(String title, String price, String url, String pic, String category, String id, String desc_text) {
+        this.title = title;
+        this.price = price;
+        this.url = url;
+        this.pic = pic;
+        this.category = category;
+        this.id = id;
+        this.desc_text = desc_text;
+    }
+
     // Getters
     public String getId() { return id; }
     public String getTitle() { return title; }

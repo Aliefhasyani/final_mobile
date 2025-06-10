@@ -87,22 +87,28 @@ public class HomeFragment extends Fragment {
                                    @NonNull Response<List<Course>> response) {
                 swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.d("API_RESPONSE", "Response: " + response.body().toString());
                     if (!response.body().isEmpty()) {
                         adapter.updateData(response.body());
-                        Log.d("HomeFragment", "Loaded " + response.body().size() + " courses");
                     } else {
-                        Log.e("HomeFragment", "Response successful but no courses");
-                        Toast.makeText(requireContext(), "No courses found",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "No courses found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    handleError(response);
+                    Log.e("API_ERROR", "Error code: " + response.code());
+                    try {
+                        Log.e("API_ERROR", "Error body: " + response.errorBody().string());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(requireContext(), "Error loading courses", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
-                handleFailure(t);
+                swipeRefresh.setRefreshing(false);
+                Log.e("API_FAILURE", "Error: " + t.getMessage());
+                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
             }
         });
     }

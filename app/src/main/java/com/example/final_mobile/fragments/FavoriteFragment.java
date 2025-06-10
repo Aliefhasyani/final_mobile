@@ -1,6 +1,9 @@
 package com.example.final_mobile.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +42,6 @@ public class FavoriteFragment extends Fragment {
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
 
         setupRecyclerView();
-        // TODO: Load favorite courses from local storage
         loadFavoriteCourses();
     }
 
@@ -48,7 +50,7 @@ public class FavoriteFragment extends Fragment {
                 course -> {
                     // Handle favorite item click
                 },
-                null  // No load more for favorites
+                null
         );
 
         rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -57,8 +59,42 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void loadFavoriteCourses() {
-        // TODO: Implement loading favorites from local storage
+        SharedPreferences prefs = requireContext().getSharedPreferences("favorites", Context.MODE_PRIVATE);
+        String favoritesStr = prefs.getString("courses", "");
         List<Course> favorites = new ArrayList<>();
+
+        if (!favoritesStr.isEmpty()) {
+            String[] entries = favoritesStr.split(";;");
+            for (String entry : entries) {
+                String[] parts = entry.split("\\|\\|");
+                if (parts.length == 3) {
+                    // Log the parts for debugging
+                    Log.d("FavoriteFragment", "Title: " + parts[0]);
+                    Log.d("FavoriteFragment", "Description: " + parts[1]);
+                    Log.d("FavoriteFragment", "Image URL: " + parts[2]);
+
+                    // Create course with the image URL in the pic field
+                    Course course = new Course(
+                            parts[0],     // title
+                            "Free",       // price
+                            null,         // url
+                            parts[2],     // pic (image URL) - This maps to the pic field
+                            "Favorite",   // category
+                            null,         // id
+                            parts[1]      // desc_text
+                    );
+
+                    // Verify the image URL is accessible through getImage()
+                    Log.d("FavoriteFragment", "Stored image URL: " + course.getImage());
+
+                    favorites.add(course);
+                }
+            }
+        }
+
+        // Log the total number of favorites loaded
+        Log.d("FavoriteFragment", "Loaded " + favorites.size() + " favorites");
+
         updateUI(favorites);
     }
 
@@ -69,6 +105,7 @@ public class FavoriteFragment extends Fragment {
         } else {
             rvFavorites.setVisibility(View.VISIBLE);
             tvEmptyState.setVisibility(View.GONE);
+
             adapter.updateData(favorites);
         }
     }

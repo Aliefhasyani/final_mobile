@@ -1,5 +1,6 @@
 package com.example.final_mobile.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,8 +62,13 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             viewHolder.tvPrice.setText(course.getPrice());
             viewHolder.tvCategory.setText(course.getCategory());
 
+            String imageUrl = course.getImage();
+            Log.d("CourseAdapter", "Loading image from URL: " + imageUrl);
+
             Glide.with(holder.itemView.getContext())
-                    .load(course.getImage())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image) // Make sure you have this drawable
+                    .error(R.drawable.error_image) // Make sure you have this drawable
                     .centerCrop()
                     .into(viewHolder.imgCourse);
 
@@ -83,7 +89,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return courses.size() + 1; // +1 for the load more button
+        return loadMoreListener != null ? courses.size() + 1 : courses.size();
     }
 
     @Override
