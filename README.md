@@ -1,35 +1,49 @@
-skibiditoilet sigma1900
 
+## Technical Implementation
 
-# Aplikasi Pembelajaran Kursus
+### 1. **Architecture**
+- Menggunakan kombinasi `Activity` dan `Fragment` untuk navigasi utama.
+- Data model kursus dikelola dengan kelas model Java.
+- Komunikasi API menggunakan Retrofit.
 
-Aplikasi Android modern untuk menelusuri dan mengelola kursus online menggunakan API udemy. Dibangun dengan komponen arsitektur Java dan Android modern.
+### 2. **UI & Theme**
+- Desain mengikuti Material Design dengan komponen seperti `MaterialToolbar`, `BottomNavigationView`, dan `RecyclerView`.
+- Mendukung dark mode dengan tema `Theme.MaterialComponents.DayNight` dan atribut tema (`?attr/colorSurface`, `?android:windowBackground`, dll) di semua layout.
+- Layout responsif menggunakan `ConstraintLayout` dan `RecyclerView` grid.
 
-## Fitur
+### 3. **Navigation**
+- Navigasi utama menggunakan `BottomNavigationView` untuk Home, Favorites, dan Settings.
+- Detail kursus dibuka dengan `Intent` ke `DetailActivity`.
 
-- Telusuri kursus dalam tata letak kotak yang responsif
-- Urutkan kursus berdasarkan abjad (A-Z dan Z-A)
-- Fungsi tarik untuk menyegarkan
-- Muat lebih banyak kursus dengan pengguliran tak terbatas
-- Manajemen kursus favorit
-- UI Desain Material yang bersih dan modern
-- Penanganan kesalahan dan dukungan offline
-- Tata letak kotak responsif dengan 2 kolom
+### 4. **Data & Network**
+- Data kursus diambil dari API Udemy via Retrofit (`ApiService`, `RetrofitClient`).
+- Header API diatur pada interceptor OkHttp.
+- Mendukung paginasi (load more) pada daftar kursus.
 
+### 5. **Favorite & State**
+- Kursus favorit disimpan secara lokal (SharedPreferences).
+- Empty state dan loading state di-handle dengan `TextView` dan `CircularProgressIndicator`.
 
+### 6. **Settings & Dark Mode**
+- Pengaturan dark mode diakses melalui `SettingsActivity` dengan `SwitchCompat`.
+- Perubahan mode langsung diterapkan dengan `AppCompatDelegate` dan restart activity.
 
+### 7. **Best Practice**
+- Semua warna dan background di layout menggunakan atribut tema agar UI otomatis menyesuaikan mode terang/gelap.
+- String dan resource lain dikelola di file resource (`strings.xml`, `colors.xml`).
 
-- **Bahasa:** Java
-- **Platform:** Android
+---
 
+**File penting:**
+- `MainActivity.java` — Navigasi utama dan fragment container.
+- `HomeFragment.java`, `FavoriteFragment.java` — Tampilan utama dan favorit.
+- `DetailActivity.java` — Detail kursus.
+- `SettingsActivity.java` — Pengaturan dark mode.
+- `adapter/CourseAdapter.java` — Adapter untuk `RecyclerView`.
+- `network/ApiService.java`, `network/RetrofitClient.java` — Koneksi API.
+- Layout XML di `res/layout/` sudah dioptimalkan untuk dark mode.
 
+---
 
-
-- **Komponen AndroidX**
-  - Batasan Tata Letak
-  - Tampilan Pendaur Ulang
-  - GesekRefreshLayout
-  - Komponen Desain Material
-- **Retrofit:** Untuk komunikasi API
-- **Glide:** Untuk memuat dan menyimpan gambar
-- **Komponen Desain Material:** Untuk elemen UI
+**Catatan:**  
+Pastikan file `themes.xml` dan `themes-night.xml` sudah mengadopsi `Theme.MaterialComponents.DayNight` agar dark mode berjalan optimal.
