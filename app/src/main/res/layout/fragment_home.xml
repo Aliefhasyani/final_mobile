@@ -1,26 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@android:color/white"
+   >
 
+    <!-- Toolbar with sort button -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/appBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:title="Courses"
+        android:titleTextColor="@android:color/white"
+
+        app:titleCentered="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Sort Button as menu icon -->
+        <ImageButton
+            android:id="@+id/btnSort"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/white"
+            android:padding="12dp"
+            android:contentDescription="Sort courses"
+            android:src="@drawable/ic_sort" />
+
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!-- Swipe Refresh + RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintBottom_toTopOf="@id/loadMoreProgress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCourses"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="16dp"
             android:clipToPadding="false"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
-            android:scrollbars="vertical" />
-
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_course" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <!-- Empty State -->
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No courses available"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="16sp"
+        android:padding="32dp"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
 
-</FrameLayout>
+    <!-- Loading Indicator -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loadMoreProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
