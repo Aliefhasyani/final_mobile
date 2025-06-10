@@ -1,6 +1,7 @@
 package com.example.final_mobile.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.final_mobile.DetailActivity;
 import com.example.final_mobile.R;
 import com.example.final_mobile.adapter.CourseAdapter;
 import com.example.final_mobile.model.Course;
@@ -48,7 +50,12 @@ public class FavoriteFragment extends Fragment {
     private void setupRecyclerView() {
         adapter = new CourseAdapter(new ArrayList<>(),
                 course -> {
-                    // Handle favorite item click
+                    // Launch DetailActivity when a favorite course is clicked
+                    Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    intent.putExtra(DetailActivity.EXTRA_COURSE_TITLE, course.getTitle());
+                    intent.putExtra(DetailActivity.EXTRA_COURSE_DESC, course.getDesc_text());
+                    intent.putExtra(DetailActivity.EXTRA_COURSE_IMAGE, course.getImage());
+                    startActivity(intent);
                 },
                 null
         );
