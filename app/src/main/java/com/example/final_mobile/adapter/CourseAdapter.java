@@ -19,7 +19,6 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_LOADING = 1;
-
     private List<Course> courses;
     private OnItemClickListener listener;
     private OnLoadMoreListener loadMoreListener;

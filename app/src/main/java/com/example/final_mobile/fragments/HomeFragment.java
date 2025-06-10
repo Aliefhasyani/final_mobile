@@ -1,12 +1,13 @@
 package com.example.final_mobile.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
+import com.example.final_mobile.DetailActivity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -64,8 +65,10 @@ public class HomeFragment extends Fragment {
     private void setupRecyclerView() {
         adapter = new CourseAdapter(new ArrayList<>(),
                 course -> {
-                    Toast.makeText(requireContext(), "Selected: " + course.getTitle(),
-                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    intent.putExtra(DetailActivity.EXTRA_COURSE_TITLE, course.getTitle());
+                    intent.putExtra(DetailActivity.EXTRA_COURSE_DESC, course.getDesc_text());
+                    startActivity(intent);
                 },
                 this::loadMoreCourses
         );

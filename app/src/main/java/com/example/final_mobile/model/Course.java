@@ -20,6 +20,8 @@ public class Course {
 
     @SerializedName("category")
     private String category;
+    @SerializedName("desc_text")
+    private String desc_text;
 
     // Getters
     public String getId() { return id; }
@@ -28,4 +30,5 @@ public class Course {
     public String getUrl() { return url; }
     public String getImage() { return pic; }  // Keep method name for compatibility
     public String getCategory() { return category; }
+    public String getDesc_text() { return desc_text; }
 }
