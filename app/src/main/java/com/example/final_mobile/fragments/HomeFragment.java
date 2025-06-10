@@ -122,7 +122,6 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     if (!response.body().isEmpty()) {
                         adapter.addCourses(response.body());
-                        Log.d("HomeFragment", "Loaded " + response.body().size() + " more courses");
                     } else {
                         currentPage--; // Revert page increment if no more courses
                         Toast.makeText(requireContext(), "No more courses available",
