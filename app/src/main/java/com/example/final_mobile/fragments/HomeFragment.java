@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment {
             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
                 swipeRefresh.setRefreshing(false);
                 Log.e("API_FAILURE", "Error: " + t.getMessage());
-                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "limit tolol", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,7 +197,7 @@ public class HomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Toast.makeText(requireContext(), "Error loading courses", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "limit tolol", Toast.LENGTH_SHORT).show();
     }
 
     private void handleFailure(Throwable t) {

@@ -1,46 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- res/layout/fragment_home.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-   >
+    android:background="?android:windowBackground">
 
-    <!-- Toolbar with sort button -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/appBar"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:background="@color/white"
+        android:layout_height="65dp"
+        android:background="?attr/colorSurface"
         android:title="Courses"
-        android:titleTextColor="@android:color/white"
-
+        android:backgroundTint="@color/white"
+        android:titleTextColor="?android:textColorPrimary"
         app:titleCentered="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Sort Button as menu icon -->
         <ImageButton
             android:id="@+id/btnSort"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="@color/white"
+            android:layout_marginTop="15dp"
             android:padding="12dp"
             android:contentDescription="Sort courses"
             android:src="@drawable/ic_sort" />
-
-
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Swipe Refresh + RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/white"
+        android:background="?android:windowBackground"
         app:layout_constraintTop_toBottomOf="@id/appBar"
         app:layout_constraintBottom_toTopOf="@id/loadMoreProgress"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,13 +52,12 @@
             tools:listitem="@layout/item_course" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Empty State -->
     <TextView
         android:id="@+id/tvEmptyState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No courses available"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="?android:textColorSecondary"
         android:textSize="16sp"
         android:padding="32dp"
         android:gravity="center"
@@ -73,7 +68,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible" />
 
-    <!-- Loading Indicator -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/loadMoreProgress"
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.example.final_mobile;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,15 +24,19 @@ public class SettingsActivity extends AppCompatActivity {
         darkModeSwitch.setChecked(isDarkMode);
 
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Save the preference
             sharedPreferences.edit().putBoolean("dark_mode", isChecked).apply();
 
-            // Apply the theme
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
+
+            // Restart MainActivity to apply the theme change
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 }

@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static final String BASE_URL = "https://paid-udemy-course-for-free.p.rapidapi.com/";
-    private static final String API_KEY = "e2ef92fbd6msh51e482d726de4f3p149a70jsnb6af69fb667c";
+    private static final String API_KEY = "387652c7e0msh879c6cf7f8cd72bp155abcjsn2d4181085a20";
     private static final String API_HOST = "paid-udemy-course-for-free.p.rapidapi.com";
     private static Retrofit retrofit = null;
 
