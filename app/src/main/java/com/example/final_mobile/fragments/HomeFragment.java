@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(requireContext(), "Error loading courses", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "LIMIT APINYA", Toast.LENGTH_SHORT).show();
                 }
             }
 
